@@ -1,0 +1,67 @@
+openapi: 3.0.0
+
+info:
+  title: A Toy dicom project
+  description: A Toy dicom project
+  version: "1.0.0"
+
+paths:
+  /instances/{instance_id}:
+    get:
+      operationId: toy_dicom_api.get_instance_element
+      summary: Fetch an element from an instance.  In this toy implementation, instances are stored on disk in a flat directory.
+      parameters:
+        - name: instance_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: group
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: element
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: The value of the element on the specified instance
+    post:
+      operationId: toy_dicom_api.create_instance
+      summary: Create a new Instance.  In this toy implementation, this just saves the file to disk.
+      parameters:
+        - name: instance_id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/octet-stream:
+            schema:
+              type: string
+              format: binary
+      responses:
+        201:
+          description: An empty response to indicate that the instance was successfully saved
+        409:
+          description: An instance with that id already exists
+
+  /instances/{instance_id}/image:
+    get:
+      operationId: toy_dicom_api.get_instance_image
+      summary: Fetch an image of an instance.
+      parameters:
+        - name: instance_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          content:
+            image/png: {}
+          description: An image
